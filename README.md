@@ -94,3 +94,11 @@ Send commands and read replies:
 ```text
 .\.conda-env\python.exe android\termux\ds4_to_xiao.py --port COM3 --command S --command "M 5 0 0" --command S
 ```
+
+## Related Projects
+
+PS-LX10 / XV-J550 capture and repair notes:
+
+```text
+C:\tmp\ps-lx10-xv-j550-capture
+```
