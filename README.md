@@ -74,3 +74,17 @@ Start with:
 - [Current next steps](docs/current-next-steps.md)
 - [Wiring notes](hardware/wiring.md)
 - [Protocol notes](docs/protocol-notes.md)
+
+## Local Python Environment
+
+A local Conda environment can be created from:
+
+```text
+conda env create -p .\.conda-env -f environment.yml
+```
+
+List visible serial ports:
+
+```text
+.\.conda-env\python.exe android\termux\ds4_to_xiao.py --list-ports
+```

@@ -17,9 +17,25 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--port", help="serial device path, for example /dev/ttyACM0")
     parser.add_argument("--baud", type=int, default=115200)
+    parser.add_argument("--list-ports", action="store_true", help="list serial ports and exit")
     parser.add_argument("--print-only", action="store_true", help="print test commands instead of using serial")
     parser.add_argument("--repeat", type=int, default=1)
     args = parser.parse_args()
+
+    if args.list_ports:
+        try:
+            from serial.tools import list_ports
+        except ImportError:
+            raise SystemExit("pyserial is required: pip install pyserial")
+
+        ports = list(list_ports.comports())
+        if not ports:
+            print("No serial ports found.")
+            return 0
+
+        for port in ports:
+            print("{}\t{}\t{}".format(port.device, port.description, port.hwid))
+        return 0
 
     pattern = [(5, 0, 0), (-5, 0, 0), (0, 5, 0), (0, -5, 0), (0, 0, 1), (0, 0, 0)]
 

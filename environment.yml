@@ -1,0 +1,7 @@
+name: xv-j550-ds4-msx-mouse
+channels:
+  - defaults
+dependencies:
+  - python=3.12
+  - pyserial=3.5
+
