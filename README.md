@@ -65,3 +65,12 @@ hardware/                Wiring and electrical notes
 4. Add Android-side DUALSHOCK 4 input capture.
 5. Tune scaling, dead zones, axis direction, and timing.
 
+## Current Status
+
+The XIAO firmware now accepts USB serial commands and contains a first-pass MSX mouse nibble output engine.
+
+Start with:
+
+- [Current next steps](docs/current-next-steps.md)
+- [Wiring notes](hardware/wiring.md)
+- [Protocol notes](docs/protocol-notes.md)

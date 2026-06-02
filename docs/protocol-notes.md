@@ -6,6 +6,20 @@ An MSX mouse reports movement as signed X/Y deltas. The host toggles a control l
 
 This project should emulate the mouse side.
 
+Public MSX protocol notes describe communication as 4-bit nibbles using pin 8 as a clock. The original protocol sends the high nibble first:
+
+```text
+Nibble 0: X delta bits 7..4
+Nibble 1: X delta bits 3..0
+Nibble 2: Y delta bits 7..4
+Nibble 3: Y delta bits 3..0
+```
+
+Signed delta convention:
+
+- Positive X means the mouse moved left.
+- Positive Y means the mouse moved up.
+
 ## Data Flow
 
 ```text
@@ -46,3 +60,7 @@ M 0 0 1
 
 Then confirm cursor movement and button behavior on the XV-J550.
 
+## Sources
+
+- MSX Wiki Mouse/Trackball: https://www.msx.org/wiki/Mouse/Trackball
+- MSX Wiki General Purpose port: https://www.msx.org/wiki/General_Purpose_port

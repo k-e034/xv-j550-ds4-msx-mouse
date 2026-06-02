@@ -26,13 +26,41 @@ Do not feed 5 V logic directly into XIAO SAMD21 GPIO pins.
 
 ## Pinout
 
-TODO: Confirm the XV-J550 mouse port pinout from the service manual or by continuity/voltage inspection.
+TODO: Confirm the XV-J550 mouse port pinout from the service manual or by continuity/voltage inspection before connecting the XIAO.
 
-Expected MSX-style signal categories:
+Standard MSX general purpose port pinout, computer-side numbering:
 
-- 4 data lines for nibble output
-- Strobe/control line from the host
-- Button lines
-- +5 V supply
-- Ground
+| Pin | Direction from computer | Role |
+| --- | --- | --- |
+| 1 | Input | Data bit 0 / joystick up |
+| 2 | Input | Data bit 1 / joystick down |
+| 3 | Input | Data bit 2 / joystick left |
+| 4 | Input | Data bit 3 / joystick right |
+| 5 | Power | +5 V, typically limited current |
+| 6 | Input/Output | Trigger A / left button |
+| 7 | Input/Output | Trigger B / right button |
+| 8 | Output | Mouse strobe/clock from host |
+| 9 | Ground | Signal ground |
 
+## Provisional XIAO Pin Mapping
+
+Do not treat this as a direct wiring table. Put the level/interface circuit between these pins and the XV-J550.
+
+| XIAO pin | MSX port pin | Firmware name |
+| --- | --- | --- |
+| D0 | 1 | DATA0 |
+| D1 | 2 | DATA1 |
+| D2 | 3 | DATA2 |
+| D3 | 4 | DATA3 |
+| D4 | 8 | STROBE input |
+| D5 | 6 | Left button |
+| D6 | 7 | Right button |
+| GND | 9 | Ground |
+
+## Pre-Connection Checklist
+
+1. With the XV-J550 powered off, identify pin 9 ground on the mouse connector.
+2. With the XV-J550 powered on and no adapter connected, measure pin 5 against pin 9. Expect around +5 V.
+3. Measure pins 1-4, 6, 7, and 8 against pin 9. Record idle voltages.
+4. Do not connect pin 8 to the XIAO until it is confirmed not to exceed 3.3 V at the XIAO input after level shifting.
+5. Confirm that XIAO data/button outputs can only pull the target line low or release it.
