@@ -88,3 +88,9 @@ List visible serial ports:
 ```text
 .\.conda-env\python.exe android\termux\ds4_to_xiao.py --list-ports
 ```
+
+Send commands and read replies:
+
+```text
+.\.conda-env\python.exe android\termux\ds4_to_xiao.py --port COM3 --command S --command "M 5 0 0" --command S
+```

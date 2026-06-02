@@ -19,7 +19,9 @@ def main():
     parser.add_argument("--baud", type=int, default=115200)
     parser.add_argument("--list-ports", action="store_true", help="list serial ports and exit")
     parser.add_argument("--print-only", action="store_true", help="print test commands instead of using serial")
+    parser.add_argument("--command", action="append", help="send one command, can be specified multiple times")
     parser.add_argument("--repeat", type=int, default=1)
+    parser.add_argument("--read-seconds", type=float, default=0.5, help="read replies for this many seconds after sending")
     args = parser.parse_args()
 
     if args.list_ports:
@@ -37,12 +39,20 @@ def main():
             print("{}\t{}\t{}".format(port.device, port.description, port.hwid))
         return 0
 
-    pattern = [(5, 0, 0), (-5, 0, 0), (0, 5, 0), (0, -5, 0), (0, 0, 1), (0, 0, 0)]
+    if args.command:
+        commands = []
+        for command in args.command:
+            command = command.strip()
+            if command:
+                commands.append((command + "\n").encode("ascii"))
+    else:
+        pattern = [(5, 0, 0), (-5, 0, 0), (0, 5, 0), (0, -5, 0), (0, 0, 1), (0, 0, 0)]
+        commands = [build_command(dx, dy, buttons) for dx, dy, buttons in pattern]
 
     if args.print_only:
         for _ in range(args.repeat):
-            for dx, dy, buttons in pattern:
-                print(build_command(dx, dy, buttons).decode("ascii").strip())
+            for command in commands:
+                print(command.decode("ascii").strip())
                 time.sleep(0.25)
         return 0
 
@@ -57,11 +67,15 @@ def main():
     with serial.Serial(args.port, args.baud, timeout=1) as ser:
         time.sleep(2.0)
         for _ in range(args.repeat):
-            for dx, dy, buttons in pattern:
-                command = build_command(dx, dy, buttons)
+            for command in commands:
                 ser.write(command)
                 ser.flush()
                 print(command.decode("ascii").strip())
+                deadline = time.time() + args.read_seconds
+                while time.time() < deadline:
+                    reply = ser.readline()
+                    if reply:
+                        print("< {}".format(reply.decode("utf-8", "replace").rstrip()))
                 time.sleep(0.25)
 
     return 0

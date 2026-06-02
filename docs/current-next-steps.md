@@ -31,6 +31,32 @@ Z
 S
 ```
 
+This repository was also tested with Arduino CLI 1.5.0 and Seeed SAMD Boards 1.8.6:
+
+```text
+tools\arduino-cli\arduino-cli.exe config add board_manager.additional_urls https://files.seeedstudio.com/arduino/package_seeeduino_boards_index.json
+tools\arduino-cli\arduino-cli.exe core update-index
+tools\arduino-cli\arduino-cli.exe core install Seeeduino:samd
+tools\arduino-cli\arduino-cli.exe compile --fqbn Seeeduino:samd:seeed_XIAO_m0 firmware\xiao-samd21-msx-mouse
+tools\arduino-cli\arduino-cli.exe upload -p COM3 --fqbn Seeeduino:samd:seeed_XIAO_m0 firmware\xiao-samd21-msx-mouse
+```
+
+The connected XIAO was detected as:
+
+```text
+COM3 USB Serial Device VID:PID=2886:802F
+```
+
+After upload, the firmware replied to:
+
+```text
+S
+M 5 0 0
+S
+Z
+S
+```
+
 ## 2. Confirm Android USB Serial
 
 Before DS4 input, prove that Android can send commands to the XIAO.
