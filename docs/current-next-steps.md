@@ -83,6 +83,16 @@ python ds4_to_xiao.py --port /dev/ttyACM0 --repeat 5
 
 If Android does not expose `/dev/ttyACM0`, USB serial may require an Android app or a Termux API workaround.
 
+The Xperia/Termux USB host path is now available through Termux:API:
+
+```text
+termux-usb -l
+termux-usb -r /dev/bus/usb/001/002
+cd ~/xv-j550-ds4-msx-mouse/android/termux
+clang -O2 -Wall -Wextra -o xiao_usb_cdc xiao_usb_cdc.c
+termux-usb -e ./xiao_usb_cdc /dev/bus/usb/001/002
+```
+
 ## 3. Measure XV-J550 Mouse Port
 
 Do not connect the XIAO yet.

@@ -33,6 +33,12 @@ Useful but optional:
 - Logic analyzer
 - Multimeter
 
+Still likely needed for the first safe hardware test:
+
+- Resistors for protection and pull-ups/pull-downs
+- Level shifting or open-collector buffer parts
+- A slim DE-9 cable or compact connector that fits the recessed XV-J550 mouse port
+
 Not required:
 
 - USB-to-RS-232C serial cable
