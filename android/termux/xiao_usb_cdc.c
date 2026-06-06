@@ -99,6 +99,26 @@ static int bulk_write_all(int fd, const char *text) {
   return 0;
 }
 
+static void print_complete_lines(const char *data, size_t length) {
+  static char line[512];
+  static size_t used = 0;
+
+  for (size_t i = 0; i < length; i++) {
+    char c = data[i];
+    if (c == '\r') {
+      continue;
+    }
+    if (c == '\n') {
+      line[used] = '\0';
+      printf("< %s\n", line);
+      used = 0;
+    } else if (used < sizeof(line) - 1) {
+      line[used++] = c;
+    }
+  }
+  fflush(stdout);
+}
+
 static void read_replies(int fd, int attempts) {
   char buffer[256];
 
@@ -112,12 +132,7 @@ static void read_replies(int fd, int attempts) {
 
     int received = ioctl(fd, USBDEVFS_BULK, &transfer);
     if (received > 0) {
-      buffer[received] = '\0';
-      printf("< %s", buffer);
-      if (buffer[received - 1] != '\n') {
-        putchar('\n');
-      }
-      fflush(stdout);
+      print_complete_lines(buffer, (size_t)received);
     } else if (received < 0 && errno != ETIMEDOUT) {
       fprintf(stderr, "USB read failed: %s\n", strerror(errno));
       return;

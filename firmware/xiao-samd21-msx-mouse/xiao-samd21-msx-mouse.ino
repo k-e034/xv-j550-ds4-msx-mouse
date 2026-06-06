@@ -37,6 +37,9 @@ uint8_t packetNibbles[4] = {0, 0, 0, 0};
 uint8_t nibbleIndex = 0;
 int lastStrobe = LOW;
 uint32_t lastClockUs = 0;
+uint32_t strobeEdgeCount = 0;
+uint32_t packetLatchCount = 0;
+bool packetPreparedDuringIdle = false;
 
 int8_t takeClampedDelta(int16_t &value) {
   int16_t out = constrain(value, -128, 127);
@@ -90,6 +93,7 @@ void latchPacket() {
   nibbleIndex = 0;
   writeNibble(packetNibbles[nibbleIndex]);
   writeButtons(buttons);
+  packetLatchCount++;
 }
 
 void setupPins() {
@@ -100,7 +104,9 @@ void setupPins() {
   releasePin(PIN_BUTTON_L);
   releasePin(PIN_BUTTON_R);
   lastStrobe = digitalRead(PIN_STROBE);
+  lastClockUs = micros();
   latchPacket();
+  packetPreparedDuringIdle = true;
 }
 
 void printHelp() {
@@ -129,6 +135,7 @@ void addMovement(int dx, int dy, uint8_t buttons) {
   state.buttons = buttons;
   interrupts();
   writeButtons(buttons);
+  packetPreparedDuringIdle = false;
 }
 
 void printStatus() {
@@ -147,7 +154,11 @@ void printStatus() {
   Serial.print(" nibbleIndex=");
   Serial.print(nibbleIndex);
   Serial.print(" strobe=");
-  Serial.println(digitalRead(PIN_STROBE));
+  Serial.print(digitalRead(PIN_STROBE));
+  Serial.print(" edges=");
+  Serial.print(strobeEdgeCount);
+  Serial.print(" latches=");
+  Serial.println(packetLatchCount);
 }
 
 void handleSerialLine(String line) {
@@ -167,6 +178,7 @@ void handleSerialLine(String line) {
     state.pendingY = 0;
     interrupts();
     latchPacket();
+    packetPreparedDuringIdle = true;
     Serial.println("OK zeroed");
     return;
   }
@@ -199,18 +211,19 @@ void pollSerial() {
 
 void pollMouseHost() {
   uint32_t now = micros();
-  if (now - lastClockUs > FRAME_RESET_US) {
-    if (nibbleIndex != 0) {
-      latchPacket();
-    }
-  }
-
   int strobe = digitalRead(PIN_STROBE);
   if (strobe != lastStrobe) {
     lastStrobe = strobe;
     lastClockUs = now;
+    strobeEdgeCount++;
+    packetPreparedDuringIdle = false;
     nibbleIndex = (nibbleIndex + 1) & 0x03;
     writeNibble(packetNibbles[nibbleIndex]);
+  }
+
+  if (now - lastClockUs > FRAME_RESET_US && !packetPreparedDuringIdle) {
+    latchPacket();
+    packetPreparedDuringIdle = true;
   }
 }
 
