@@ -1,0 +1,16 @@
+plugins {
+    id "com.android.application"
+}
+
+android {
+    namespace "jp.kaiki.xvj550mouse"
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "jp.kaiki.xvj550mouse"
+        minSdk 29
+        targetSdk 34
+        versionCode 1
+        versionName "0.1.0"
+    }
+}

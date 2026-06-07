@@ -113,3 +113,40 @@ The firmware assumes open-drain behavior:
 ```
 
 The external circuit must protect the 3.3 V XIAO from 5 V input and pull-up levels.
+
+## Verified Milestone
+
+End-to-end cursor movement is working:
+
+```text
+Xperia Termux USB helper
+  -> XIAO USB CDC
+  -> MSX mouse nibble output
+  -> BSS138 level conversion
+  -> XV-J550
+```
+
+Next development steps:
+
+1. Verify left-click and release behavior independently.
+2. Use `~/.xiao_mouse_commands` for directional movement tests.
+3. Connect and verify right-click on XV-J550 pin 7.
+4. Replace command-file tests with continuous movement commands.
+5. Capture DUALSHOCK 4 input using an Android input API.
+6. Add dead-zone, speed scaling, axis inversion, and button mapping.
+
+Directional testing found and corrected a one-nibble strobe phase error.
+The corrected firmware has been verified:
+
+```text
+M 1 0 0   -> left
+M -1 0 0  -> right
+M 0 1 0   -> up
+M 0 -1 0  -> down
+```
+
+Left-button down and release are also verified.
+
+Right-click is wired to XV-J550 pin 7 through XIAO D6. Re-test it on the layout
+screen, because the XV-J550 manual indicates that the creation screen does not
+use right-click.

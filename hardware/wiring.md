@@ -192,3 +192,40 @@ Connect and verify signals in this order:
 
 Always power off the XV-J550 and disconnect XIAO USB before changing signal
 wiring.
+
+## Initial Integrated Test Results
+
+- Xperia/Termux can communicate with the XIAO over USB CDC.
+- With the XV-J550 powered off, the diagnostic firmware reports:
+
+```text
+pendingX=0 pendingY=0 buttons=0 nibbleIndex=0 strobe=0 edges=0
+```
+
+- With the XV-J550 powered on and the strobe/data lines connected, USB CDC
+  replies can be delayed or omitted while the XV-J550 is actively polling the
+  mouse port.
+- After correcting the breadboard wiring, the firmware reported at least 52
+  strobe edges from the XV-J550.
+- The Termux USB helper successfully sent a click pulse and X-axis movement.
+- The XV-J550 cursor visibly moved. This confirms the data lines, strobe line,
+  level conversion, firmware nibble output, and USB command path are working
+  end to end.
+
+Known behavior:
+
+- The powered XV-J550 polls the mouse port frequently.
+- Frequent mouse-port polling can delay USB CDC diagnostic replies, but mouse
+  movement commands are still processed.
+
+Next isolation test:
+
+1. Power off XV-J550 and disconnect XIAO USB.
+2. Disconnect only the module-to-XIAO strobe wire at XIAO D4.
+3. Leave data lines and all power/ground wiring unchanged.
+4. Reconnect XIAO USB and power on XV-J550.
+5. Run the USB CDC smoke test.
+
+If USB replies return with `edges=0`, the strobe path/firmware handling is the
+cause. Do not reconnect D4 until the firmware is changed to interrupt-driven
+strobe capture or the signal integrity is verified.

@@ -140,14 +140,66 @@ static void read_replies(int fd, int attempts) {
   }
 }
 
-static int send_command(int fd, const char *command) {
+static int send_command(int fd, const char *command, int read_attempts) {
   printf("> %s", command);
   fflush(stdout);
   if (bulk_write_all(fd, command) < 0) {
     return -1;
   }
-  read_replies(fd, 4);
+  read_replies(fd, read_attempts);
   return 0;
+}
+
+static int send_command_file(int fd) {
+  const char *home = getenv("HOME");
+  if (home == NULL) {
+    return 0;
+  }
+
+  char path[512];
+  if (snprintf(path, sizeof(path), "%s/.xiao_mouse_commands", home) >=
+      (int)sizeof(path)) {
+    fprintf(stderr, "command file path is too long\n");
+    return -1;
+  }
+
+  FILE *file = fopen(path, "r");
+  if (file == NULL) {
+    if (errno != ENOENT) {
+      fprintf(stderr, "cannot open %s: %s\n", path, strerror(errno));
+      return -1;
+    }
+    return 0;
+  }
+
+  printf("Using commands from %s\n", path);
+  char line[128];
+  while (fgets(line, sizeof(line), file) != NULL) {
+    size_t length = strlen(line);
+    while (length > 0 && (line[length - 1] == '\n' || line[length - 1] == '\r')) {
+      line[--length] = '\0';
+    }
+
+    if (length == 0 || line[0] == '#') {
+      continue;
+    }
+
+    if (length + 1 >= sizeof(line)) {
+      fprintf(stderr, "command is too long: %s\n", line);
+      fclose(file);
+      return -1;
+    }
+
+    line[length++] = '\n';
+    line[length] = '\0';
+    if (send_command(fd, line, 2) < 0) {
+      fclose(file);
+      return -1;
+    }
+  }
+
+  fclose(file);
+  return 1;
 }
 
 int main(int argc, char **argv) {
@@ -169,16 +221,29 @@ int main(int argc, char **argv) {
 
   read_replies(fd, 6);
 
-  const char *commands[] = {
-      "S\n",
-      "M 5 0 0\n",
-      "S\n",
-      "Z\n",
-      "S\n",
+  int command_file_result = send_command_file(fd);
+  if (command_file_result < 0) {
+    return 1;
+  }
+  if (command_file_result > 0) {
+    return 0;
+  }
+
+  struct {
+    const char *text;
+    int read_attempts;
+  } commands[] = {
+      {"S\n", 2},
+      {"M 0 0 1\n", 1},   /* Left button down for about 300 ms. */
+      {"M 0 0 0\n", 2},   /* Left button up. */
+      {"M 30 0 0\n", 2},  /* Visible horizontal movement test. */
+      {"S\n", 2},
+      {"Z\n", 2},
+      {"S\n", 2},
   };
 
   for (size_t i = 0; i < sizeof(commands) / sizeof(commands[0]); i++) {
-    if (send_command(fd, commands[i]) < 0) {
+    if (send_command(fd, commands[i].text, commands[i].read_attempts) < 0) {
       return 1;
     }
   }

@@ -20,6 +20,54 @@ Signed delta convention:
 - Positive X means the mouse moved left.
 - Positive Y means the mouse moved up.
 
+## XV-J550 Strobe Phase
+
+Directional testing identified the host-read phase:
+
+- The XV-J550 toggles pin 8, then reads the presented nibble.
+- The XIAO must therefore present X-high on the first observed strobe edge.
+- Presenting X-high before that edge shifts the report by one nibble.
+
+The one-nibble phase error produced these diagnostic results:
+
+```text
+Command       Misread nibbles   Observed movement
+-X: FF 00     F0 0F             right and up
+-Y: 00 FF     0F F0             left and down
+```
+
+The firmware now initializes the nibble index one step before X-high.
+
+## Verified XV-J550 Behavior
+
+After correcting the strobe phase, the following commands produce independent,
+correctly oriented movement:
+
+```text
+M 1 0 0    left
+M -1 0 0   right
+M 0 1 0    up
+M 0 -1 0   down
+```
+
+Button behavior:
+
+```text
+M 0 0 1    left button down
+M 0 0 0    left button release, with no visible action by itself
+```
+
+Right button:
+
+```text
+M 0 0 2    right button down
+M 0 0 0    right button release
+```
+
+The XV-J550 manual indicates that right-click is unused on the creation screen
+and is used on the layout screen. No visible reaction on the creation screen is
+therefore expected and does not indicate a wiring or protocol failure.
+
 ## Data Flow
 
 ```text

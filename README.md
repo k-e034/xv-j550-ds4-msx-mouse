@@ -58,6 +58,7 @@ The XIAO SAMD21 uses 3.3 V GPIO and is not assumed to be 5 V tolerant. Use level
 
 ```text
 android/termux/          Android-side DS4 input bridge prototype
+android/native-app/      Native Android DS4-to-XIAO bridge
 docs/                    Protocol notes
 firmware/                XIAO SAMD21 firmware
 hardware/                Wiring and electrical notes
@@ -73,7 +74,36 @@ hardware/                Wiring and electrical notes
 
 ## Current Status
 
-The XIAO firmware now accepts USB serial commands and contains a first-pass MSX mouse nibble output engine.
+The first end-to-end cursor movement test has succeeded.
+
+```text
+Windows SSH client
+  -> Xperia / Termux
+  -> USB OTG
+  -> XIAO SAMD21
+  -> BSS138 level converters
+  -> XV-J550 mouse port
+  -> visible cursor movement
+```
+
+The XIAO firmware accepts USB CDC commands and successfully responds to the
+XV-J550 mouse-port strobe sequence. A Termux USB helper sent a left-click pulse
+and an X-axis movement command, and the XV-J550 cursor moved.
+
+Verified controls:
+
+```text
+M 1 0 0    -> left
+M -1 0 0   -> right
+M 0 1 0    -> up
+M 0 -1 0   -> down
+M 0 0 1    -> left button down
+M 0 0 0    -> left button release
+```
+
+Right-click is connected and available as button bit 1 (`M 0 0 2`). According
+to the XV-J550 manual, right-click has no function on the creation screen and
+should be verified on the layout screen.
 
 Start with:
 

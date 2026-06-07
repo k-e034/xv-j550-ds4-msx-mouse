@@ -15,3 +15,6 @@ tools/
 *.uf2
 *.bin
 *.hex
+
+android/native-app/local.properties
+android/native-app/.gradle/

@@ -90,8 +90,9 @@ void latchPacket() {
   packetNibbles[1] = ux & 0x0F;
   packetNibbles[2] = (uy >> 4) & 0x0F;
   packetNibbles[3] = uy & 0x0F;
-  nibbleIndex = 0;
-  writeNibble(packetNibbles[nibbleIndex]);
+  // The XV-J550 toggles pin 8 before reading each nibble. Keep the index one
+  // step before X-high so the first strobe edge presents packetNibbles[0].
+  nibbleIndex = 3;
   writeButtons(buttons);
   packetLatchCount++;
 }
