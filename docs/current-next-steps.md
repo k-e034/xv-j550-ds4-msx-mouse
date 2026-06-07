@@ -61,16 +61,16 @@ S
 
 Before DS4 input, prove that Android can send commands to the XIAO.
 
-On this Windows development machine, use the local Conda environment first:
+On Windows, use the local Conda environment first:
 
 ```text
-C:\tmp\xv-j550-ds4-msx-mouse\.conda-env\python.exe android\termux\ds4_to_xiao.py --list-ports
+.\.conda-env\python.exe android\termux\ds4_to_xiao.py --list-ports
 ```
 
 After the XIAO appears as a COM port:
 
 ```text
-C:\tmp\xv-j550-ds4-msx-mouse\.conda-env\python.exe android\termux\ds4_to_xiao.py --port COM3 --repeat 5
+.\.conda-env\python.exe android\termux\ds4_to_xiao.py --port COM3 --repeat 5
 ```
 
 Replace `COM3` with the detected port.

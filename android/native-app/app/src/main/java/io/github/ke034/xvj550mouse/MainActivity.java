@@ -1,4 +1,4 @@
-package jp.kaiki.xvj550mouse;
+package io.github.ke034.xvj550mouse;
 
 import android.app.Activity;
 import android.app.PendingIntent;
@@ -33,7 +33,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 
 public class MainActivity extends Activity implements InputManager.InputDeviceListener {
-    private static final String USB_PERMISSION = "jp.kaiki.xvj550mouse.USB_PERMISSION";
+    private static final String USB_PERMISSION = "io.github.ke034.xvj550mouse.USB_PERMISSION";
     private static final int XIAO_VENDOR_ID = 0x2886;
     private static final int XIAO_PRODUCT_ID = 0x802F;
     private static final int FRAME_MS = 16;
@@ -184,8 +184,9 @@ public class MainActivity extends Activity implements InputManager.InputDeviceLi
                 if (usbManager.hasPermission(device)) {
                     openXiao(device);
                 } else {
+                    Intent permission = new Intent(USB_PERMISSION).setPackage(getPackageName());
                     PendingIntent permissionIntent = PendingIntent.getBroadcast(
-                            this, 0, new Intent(USB_PERMISSION), PendingIntent.FLAG_IMMUTABLE);
+                            this, 0, permission, PendingIntent.FLAG_IMMUTABLE);
                     usbManager.requestPermission(device, permissionIntent);
                 }
                 return;

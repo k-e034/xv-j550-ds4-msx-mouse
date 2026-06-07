@@ -2,7 +2,8 @@
 
 DUALSHOCK 4 input on Android, translated through a Seeed Studio XIAO SAMD21 into MSX-compatible mouse signals for the XV-J550 mouse port.
 
-This project exists as a practical substitute for increasingly expensive MSX-compatible mice such as MOS-1(G). It does not assume access to an original mouse for protocol capture.
+This project is a practical substitute for MSX-compatible mice such as the
+MOS-1(G). It does not require an original mouse for protocol capture.
 
 ## Goal
 
@@ -33,12 +34,6 @@ Useful but optional:
 - Logic analyzer
 - Multimeter
 
-Still likely needed for the first safe hardware test:
-
-- Resistors for protection and pull-ups/pull-downs
-- Level shifting or open-collector buffer parts
-- A slim DE-9 cable or compact connector that fits the recessed XV-J550 mouse port
-
 Not required:
 
 - USB-to-RS-232C serial cable
@@ -64,17 +59,9 @@ firmware/                XIAO SAMD21 firmware
 hardware/                Wiring and electrical notes
 ```
 
-## Development Plan
+## Status
 
-1. Implement an MSX mouse signal emulator on the XIAO SAMD21.
-2. Feed test `dx`, `dy`, and button values from a PC or Android serial terminal.
-3. Verify XV-J550 cursor movement and button behavior.
-4. Add Android-side DUALSHOCK 4 input capture.
-5. Tune scaling, dead zones, axis direction, and timing.
-
-## Current Status
-
-The first end-to-end cursor movement test has succeeded.
+End-to-end control is verified on real hardware.
 
 ```text
 Windows SSH client
@@ -120,9 +107,10 @@ should be verified on the layout screen.
 
 Start with:
 
-- [Current next steps](docs/current-next-steps.md)
+- [Native Android app](android/native-app/README.md)
 - [Wiring notes](hardware/wiring.md)
 - [Protocol notes](docs/protocol-notes.md)
+- [Development and diagnostic notes](docs/current-next-steps.md)
 
 ## Local Python Environment
 
@@ -144,10 +132,13 @@ Send commands and read replies:
 .\.conda-env\python.exe android\termux\ds4_to_xiao.py --port COM3 --command S --command "M 5 0 0" --command S
 ```
 
-## Related Projects
+## Disclaimer
 
-PS-LX10 / XV-J550 capture and repair notes:
+This is an independent hobby project and is not affiliated with or endorsed by
+Sony, Seeed Studio, Google, or the owners of the DUALSHOCK and MSX trademarks.
+Hardware modifications are performed at your own risk. Verify voltages and
+connector orientation before connecting any device.
 
-```text
-C:\tmp\ps-lx10-xv-j550-capture
-```
+## License
+
+MIT. See [LICENSE](LICENSE).

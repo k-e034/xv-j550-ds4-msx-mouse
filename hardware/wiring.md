@@ -1,8 +1,9 @@
 # Hardware Wiring Notes
 
-## Current Assumption
+## Verified Protocol
 
-The XV-J550 mouse port is assumed to be MSX mouse compatible.
+The XV-J550 mouse port has been verified to use an MSX-compatible mouse
+protocol and pinout.
 
 MSX-style mouse ports use a 9-pin connector, but they are not RS-232C serial ports. The signal lines are GPIO-style control and data lines.
 
@@ -26,8 +27,6 @@ Do not feed 5 V logic directly into XIAO SAMD21 GPIO pins.
 
 ## Pinout
 
-TODO: Confirm the XV-J550 mouse port pinout from the service manual or by continuity/voltage inspection before connecting the XIAO.
-
 Standard MSX general purpose port pinout, computer-side numbering:
 
 | Pin | Direction from computer | Role |
@@ -42,7 +41,7 @@ Standard MSX general purpose port pinout, computer-side numbering:
 | 8 | Output | Mouse strobe/clock from host |
 | 9 | Ground | Signal ground |
 
-## Provisional XIAO Pin Mapping
+## XIAO Pin Mapping
 
 Do not treat this as a direct wiring table. Put the level/interface circuit between these pins and the XV-J550.
 
@@ -103,51 +102,13 @@ Confirmed reference pins:
 The XIAO must still not be connected directly to any 4.95 V signal. Use the
 BSS138 level converter modules between the XV-J550 signal pins and XIAO GPIO.
 
-## Ordered Parts
+## Prototype Parts
 
-Ordered parts pending receipt:
-
-| Qty | Part No. | Item | Price |
-| --- | --- | --- | --- |
-| 1 | 130088 | Breadboard jumper wire set, 60+ wires, unsorted / ZYJ-W1 | 300 JPY |
-| 1 | 100315 | Breadboard EIC-801 / 165-40-4-8010 | 370 JPY |
-| 1 | 112031 | 0.96 inch 128x64 OLED display, white | 580 JPY |
-| 1 | 117237 | D-sub 9P female breakout board VE1045 | 280 JPY |
-
-Notes:
-
-- The D-sub 9P female breakout is useful on the workbench side.
-- Because the XV-J550 connector is recessed with little side clearance, do not assume this breakout board can plug directly into the XV-J550.
-- A slim D-sub cable or compact solder-cup connector may still be needed for the XV-J550 side.
-
-## Parts Received / Purchased
-
-Confirmed from receipts and photos on 2026-06-06:
-
-| Qty | Part No. / Model | Item | Intended Use |
-| --- | --- | --- | --- |
-| 2 | 113837 / AE-LCNV4-MOSFET(BSS138) | 4-bit bidirectional logic level converter | Eight available 3.3 V / 5 V signal channels |
-| 1 | 130088 / ZYJ-W1 | Breadboard jumper wire set | Prototyping wiring |
-| 1 | 100315 / EIC-801 | Breadboard | Prototype assembly |
-| 1 | 112031 | 0.96 inch 128x64 white OLED | Optional status display |
-| 1 | 117237 / VE1045 | D-sub 9P female breakout board | Workbench-side D-sub breakout |
-| 1 | DT-10B | Pocket digital multimeter | Pin identification and voltage checks |
-| 1 | goot KS-30R | 30 W soldering iron | Connector and final wiring assembly |
-| 1 | goot GS-108 | Desoldering sucker | Rework and repair |
-| 1 | goot SD-81 | 0.6 mm Sn60/Pb40 rosin-core solder | Fine electronics soldering |
-
-Also pictured:
-
-- NEC Aterm WG1800HP router; not required for the mouse interface itself.
-
-## Remaining Fit Check
-
-The VE1045 is a female D-sub breakout board. Before attempting connection:
-
-1. Confirm the gender of the recessed XV-J550 mouse connector.
-2. Confirm the VE1045 physically mates with it.
-3. Do not force the breakout board into the recessed connector.
-4. If it does not fit, obtain a slim mating DE-9 connector or cable and use the VE1045 only on the workbench side.
+- Two 4-channel BSS138 bidirectional logic-level converter modules
+- Breadboard and jumper wires
+- Female DE-9 breakout board or a compact connector that fits the recessed port
+- Multimeter
+- Seeed Studio XIAO SAMD21
 
 ## Assembly Progress
 
@@ -217,15 +178,3 @@ Known behavior:
 - The powered XV-J550 polls the mouse port frequently.
 - Frequent mouse-port polling can delay USB CDC diagnostic replies, but mouse
   movement commands are still processed.
-
-Next isolation test:
-
-1. Power off XV-J550 and disconnect XIAO USB.
-2. Disconnect only the module-to-XIAO strobe wire at XIAO D4.
-3. Leave data lines and all power/ground wiring unchanged.
-4. Reconnect XIAO USB and power on XV-J550.
-5. Run the USB CDC smoke test.
-
-If USB replies return with `edges=0`, the strobe path/firmware handling is the
-cause. Do not reconnect D4 until the firmware is changed to interrupt-driven
-strobe capture or the signal integrity is verified.

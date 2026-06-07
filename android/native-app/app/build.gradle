@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace "jp.kaiki.xvj550mouse"
+    namespace "io.github.ke034.xvj550mouse"
     compileSdk 34
 
     defaultConfig {
-        applicationId "jp.kaiki.xvj550mouse"
+        applicationId "io.github.ke034.xvj550mouse"
         minSdk 29
         targetSdk 34
         versionCode 1
