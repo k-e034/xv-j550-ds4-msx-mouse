@@ -101,6 +101,19 @@ M 0 0 1    -> left button down
 M 0 0 0    -> left button release
 ```
 
+The native Android app has also been verified end to end:
+
+```text
+DUALSHOCK 4 over Bluetooth
+  -> Xperia Android game-controller input
+  -> native XV-J550 Mouse app
+  -> XIAO USB CDC
+  -> XV-J550 cursor and button input
+```
+
+On the tested Xperia, Android exposes the active DS4 input device to the app as
+`Virtual`. This is expected on that device; DS4 movement and buttons work.
+
 Right-click is connected and available as button bit 1 (`M 0 0 2`). According
 to the XV-J550 manual, right-click has no function on the creation screen and
 should be verified on the layout screen.

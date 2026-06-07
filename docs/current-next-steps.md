@@ -135,6 +135,13 @@ Next development steps:
 5. Capture DUALSHOCK 4 input using an Android input API.
 6. Add dead-zone, speed scaling, axis inversion, and button mapping.
 
+## Native Android Milestone
+
+The native Android application is verified working end to end. A
+Bluetooth-connected DUALSHOCK 4 controls the XV-J550 cursor and buttons through
+the Xperia and XIAO. The Xperia reports the controller device name as
+`Virtual`, but input operation is correct.
+
 Directional testing found and corrected a one-nibble strobe phase error.
 The corrected firmware has been verified:
 

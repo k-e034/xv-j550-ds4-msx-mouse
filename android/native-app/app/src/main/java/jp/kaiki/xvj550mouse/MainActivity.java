@@ -258,6 +258,7 @@ public class MainActivity extends Activity implements InputManager.InputDeviceLi
     public boolean dispatchGenericMotionEvent(MotionEvent event) {
         if ((event.getSource() & InputDevice.SOURCE_JOYSTICK) == InputDevice.SOURCE_JOYSTICK
                 && event.getAction() == MotionEvent.ACTION_MOVE) {
+            showActiveController(event.getDevice());
             axisX = centeredAxis(event, MotionEvent.AXIS_X);
             axisY = centeredAxis(event, MotionEvent.AXIS_Y);
             updateInputText();
@@ -279,6 +280,7 @@ public class MainActivity extends Activity implements InputManager.InputDeviceLi
     public boolean dispatchKeyEvent(KeyEvent event) {
         int mask = buttonMask(event.getKeyCode());
         if (mask != 0) {
+            showActiveController(event.getDevice());
             if (event.getAction() == KeyEvent.ACTION_DOWN) buttons |= mask;
             if (event.getAction() == KeyEvent.ACTION_UP) buttons &= ~mask;
             updateInputText();
@@ -332,6 +334,12 @@ public class MainActivity extends Activity implements InputManager.InputDeviceLi
             }
         }
         controllerText.setText("Controller: " + name);
+    }
+
+    private void showActiveController(InputDevice device) {
+        String name = device == null ? "Virtual" : device.getName();
+        controllerText.setText("Controller: " + name + " (active)");
+        controllerText.setTextColor(Color.rgb(0, 120, 60));
     }
 
     @Override

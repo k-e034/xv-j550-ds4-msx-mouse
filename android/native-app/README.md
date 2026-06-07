@@ -49,3 +49,11 @@ The speed slider controls movement per 16 ms frame. Start at a low value.
 
 Close any active `termux-usb -e ...` command before opening the app so only one
 process owns the XIAO USB interface.
+
+## Verified Xperia Behavior
+
+The app successfully transmits Bluetooth DUALSHOCK 4 input to the XV-J550.
+
+On the tested Xperia, the controller name is reported by Android as `Virtual`
+rather than `Wireless Controller`. This does not prevent operation. Once an
+input event is received, the app marks the controller status as active.
