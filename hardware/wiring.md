@@ -1,5 +1,7 @@
 # Hardware Wiring Notes
 
+[An example of wiring](others/IMG_7949.png)
+
 ## Verified Protocol
 
 The XV-J550 mouse port has been verified to use an MSX-compatible mouse
