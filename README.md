@@ -1,4 +1,4 @@
-![タイトル](https://github.com/k-e034/xv-j550-ds4-msx-mouse/tree/main/others/IMG_7943.PNG)
+![This project is mainly coded by Codex.](others/IMG_7943.PNG)
 
 # XV-J550 DS4 MSX Mouse Emulator
 
