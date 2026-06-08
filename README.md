@@ -1,4 +1,4 @@
-![This project is mainly coded by Codex.](others/IMG_7943.PNG)
+![This project is mainly coded by Codex.](others/IMG_7943.png)
 
 # XV-J550 DS4 MSX Mouse Emulator
 
